@@ -4,7 +4,7 @@ const gmailInput = document.querySelector("#gmail_input")
 const gmailButton = document.querySelector("#gmail_button")
 const gmailResult = document.querySelector("#gmail_result")
 
-const regExp = /^[a-zA-Z][a-zA-Z0-9._]{1,}@gmail\.com$/
+const regExp = /^[a-zA-Z][a-zA-Z0-9._]{2,}@gmail\.com$/
 
 gmailButton.onclick = () => {
     if (regExp.test(gmailInput.value)) {
@@ -17,24 +17,24 @@ gmailButton.onclick = () => {
 }
 
 
-// RED BLOCK //
+// Move BLOCK //
 
-const redBlock = document.querySelector(".child_block");
-redBlock.style.position = "relative";
-let blockPosition = 0;
+const parentBlock = document.querySelector(".parent_block")
+const childBlock = document.querySelector(".child_block")
 
-function blockMove() {
-    if (blockPosition < 450) {
-        blockPosition ++
-        redBlock.style.left = blockPosition + "px";
-        requestAnimationFrame(blockMove);
-    }
+let positionX = 0
+
+const offsetWidth = parentBlock.clientWidth - childBlock.offsetWidth
+
+const moveBlock = () => {
+    positionX++
+    childBlock.style.left = positionX + "px"
+    if (positionX < offsetWidth) {
+        requestAnimationFrame(moveBlock)
+    } 
 }
 
-redBlock.onclick = () => {
-    blockMove();
-};
-
+moveBlock()
 
 
 
