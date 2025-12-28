@@ -28,7 +28,7 @@ const offsetWidth = parentBlock.clientWidth - childBlock.offsetWidth
 
 const moveBlock = () => {
     positionX++
-    childBlock.style.left = positionX + "px"
+    childBlock.style.left= `${positionX}px`
     if (positionX < offsetWidth) {
         requestAnimationFrame(moveBlock)
     } 
