@@ -64,4 +64,37 @@ setInterval (() => {
 }, 3000)
 
 
+//CONVERTER
 
+
+
+const somInput = document.querySelector('#som')
+const usdInput = document.querySelector('#usd')
+
+const converter = (element, targetElement) => {
+    element.oninput = () => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', '../data/converter.json')
+        xhr.setRequestHeader('Content-type', 'application/json')
+        xhr.send()
+
+        xhr.onload = () => {
+            const data = JSON.parse(xhr.response)
+
+            if(element.id === 'som') {
+                targetElement.value = (element.value / data.usd).toFixed(2)
+            }
+
+            if (element.id === 'usd') {
+                targetElement.value = (element.value * data.usd).toFixed(2)
+            }
+
+            if(element.value === '') {
+                targetElement.value = ''
+            }
+        }
+    }
+}
+
+
+converter(somInput, usdInput)

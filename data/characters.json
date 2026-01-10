@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Razor",
+    "age": 10000,
+    "image": "../images/razor.gif"
+  },
+  {
+    "name": "Arc Warden",
+    "age": "???",
+    "image": "../images/arc_warden.gif"
+  },
+  {
+    "name": "Juggernaut",
+    "age": "27",
+    "image": "../images/juggernaut.gif"
+  }
+]

@@ -82,4 +82,39 @@ resetButton.addEventListener("click",() => {
     timerValue.textContent = seconds
 })
 
+//CHARECTERS
 
+const charactersList = document.querySelector(".characters-list")
+
+const xhr = new XMLHttpRequest()
+xhr.open("GET", "../data/characters.json")
+xhr.send()
+
+xhr.onload = () => {
+    const data = JSON.parse(xhr.response)
+    data.forEach(character => {
+        const card = document.createElement("div")
+        card.classList.add("character-card")
+
+        card.innerHTML = `
+            <div class="character-photo">
+                <img src="${character.image}" alt="${character.name}">
+            </div>
+            <h3>${character.name}</h3>
+            <p>age:${character.age}</p>
+        `
+        charactersList.append(card)
+    })
+}
+
+//any
+
+const anyXhr = new XMLHttpRequest()
+anyXhr.open("GET", "../data/any.json")
+anyXhr.setRequestHeader("Content-Type", "application/json")
+anyXhr.send()
+
+anyXhr.onload = () => {
+    const data = JSON.parse(anyXhr.response)
+    console.log(data)
+}
