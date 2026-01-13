@@ -67,34 +67,59 @@ setInterval (() => {
 //CONVERTER
 
 
-
 const somInput = document.querySelector('#som')
 const usdInput = document.querySelector('#usd')
+const eurInput = document.querySelector('#eur')
 
-const converter = (element, targetElement) => {
-    element.oninput = () => {
-        const xhr = new XMLHttpRequest()
-        xhr.open('GET', '../data/converter.json')
-        xhr.setRequestHeader('Content-type', 'application/json')
-        xhr.send()
+const xhr = new XMLHttpRequest()
+xhr.open('GET', '../data/converter.json')
+xhr.send()
 
-        xhr.onload = () => {
-            const data = JSON.parse(xhr.response)
+xhr.onload = () => {
+    const data = JSON.parse(xhr.response)
 
-            if(element.id === 'som') {
-                targetElement.value = (element.value / data.usd).toFixed(2)
-            }
-
-            if (element.id === 'usd') {
-                targetElement.value = (element.value * data.usd).toFixed(2)
-            }
-
+    const converter = (element, targetElement) => {
+        element.addEventListener('input', () => {
             if(element.value === '') {
-                targetElement.value = ''
+                targetElement.value = '' 
+                return
             }
-        }
+            
+            if(element.id === 'som' && (targetElement.id === 'usd' || targetElement.id === 'eur')) {
+                if(targetElement.id === 'usd') {
+                    targetElement.value = (element.value / data.usd).toFixed(2)
+                }
+                if(targetElement.id === 'eur') {
+                    targetElement.value = (element.value / data.eur).toFixed(2)
+                }
+            }
+
+            if(element.id === 'usd' && (targetElement.id === 'som' || targetElement.id === 'eur')) {
+                if (targetElement.id === 'som') {
+                    targetElement.value = (element.value * data.usd).toFixed(2)
+                }
+                if(targetElement.id === 'eur') {
+                    targetElement.value = ((element.value * data.usd) / data.eur).toFixed(2)
+                }
+            }
+
+            if(element.id === 'eur' && (targetElement.id === 'usd' || targetElement.id === 'som')) {
+                if (targetElement.id === 'som'){
+                    targetElement.value = (element.value * data.eur).toFixed(2)
+                }
+                if(targetElement.id === 'usd'){
+                    targetElement.value = ((element.value * data.eur) / data.usd).toFixed(2)
+                }
+            }
+        })
     }
+
+    converter(somInput, usdInput)
+    converter(usdInput, somInput)
+    converter(somInput, eurInput)
+    converter(eurInput, somInput)
+    converter(eurInput, usdInput)
+    converter(usdInput, eurInput)
+
 }
 
-
-converter(somInput, usdInput)
