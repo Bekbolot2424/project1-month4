@@ -123,3 +123,54 @@ xhr.onload = () => {
 
 }
 
+//CARD SWITCHER
+
+const card = document.querySelector(".card")
+const btnNext = document.querySelector("#btn-next")
+const btnPrev = document.querySelector("#btn-prev")
+let cardId = 1
+
+const cardSwitch = () => {
+    fetch(`https://jsonplaceholder.typicode.com/todos/${cardId}`)
+    .then(response => response.json())
+    .then(data => {
+        const {title, completed, id} = data
+        card.style.borderColor  = completed ? 'green' : 'red'
+        card.innerHTML = `
+            <p>${title}</p>
+            <span>${id}</span>
+        `
+    }) 
+}
+
+    btnNext.onclick = () => {
+        if(cardId < 200){
+            cardId++
+            cardSwitch()
+        }else{
+            cardId = 1
+            cardSwitch()
+        }
+    }
+    btnPrev.onclick = () => {
+        if(cardId > 1) {
+            cardId--
+            cardSwitch()
+        }else{
+            cardId = 200
+            cardSwitch()
+        }
+    }
+
+cardSwitch()
+
+
+//  POSTS  //
+
+fetch(`https://jsonplaceholder.typicode.com/posts`)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(posts => {
+            console.log(posts)
+        })
+    })
