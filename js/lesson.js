@@ -130,18 +130,27 @@ const btnNext = document.querySelector("#btn-next")
 const btnPrev = document.querySelector("#btn-prev")
 let cardId = 1
 
-const cardSwitch = () => {
-    fetch(`https://jsonplaceholder.typicode.com/todos/${cardId}`)
-    .then(response => response.json())
-    .then(data => {
-        const {title, completed, id} = data
-        card.style.borderColor  = completed ? 'green' : 'red'
+const cardSwitch = async () => {
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${cardId}`);
+
+        if (!response.ok) {
+            throw new Error('Ошибка запроса');
+        }
+
+        const data = await response.json();
+        const { title, completed, id } = data;
+
+        card.style.borderColor = completed ? 'green' : 'red';
         card.innerHTML = `
             <p>${title}</p>
             <span>${id}</span>
-        `
-    }) 
-}
+        `;
+    } catch (error) {
+        console.error('Card switch error:', error.message);
+    }
+};
+
 
     btnNext.onclick = () => {
         if(cardId < 200){
@@ -167,10 +176,23 @@ cardSwitch()
 
 //  POSTS  //
 
-fetch(`https://jsonplaceholder.typicode.com/posts`)
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(posts => {
-            console.log(posts)
-        })
-    })
+const fetchPosts = async () => {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+
+        if (!response.ok) {
+            throw new Error('Ошибка загрузки постов');
+        }
+
+        const data = await response.json();
+
+        data.forEach(post => {
+            console.log(post);
+        });
+
+    } catch (error) {
+        console.error('Posts error:', error.message);
+    }
+};
+
+fetchPosts();

@@ -84,37 +84,54 @@ resetButton.addEventListener("click",() => {
 
 //CHARECTERS
 
-const charactersList = document.querySelector(".characters-list")
+const fetchCharacters = async () => {
+    try {
+        const response = await fetch("../data/characters.json");
 
-const xhr = new XMLHttpRequest()
-xhr.open("GET", "../data/characters.json")
-xhr.send()
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки персонажей");
+        }
 
-xhr.onload = () => {
-    const data = JSON.parse(xhr.response)
-    data.forEach(character => {
-        const card = document.createElement("div")
-        card.classList.add("character-card")
+        const data = await response.json();
 
-        card.innerHTML = `
-            <div class="character-photo">
-                <img src="${character.image}" alt="${character.name}">
-            </div>
-            <h3>${character.name}</h3>
-            <p>age:${character.age}</p>
-        `
-        charactersList.append(card)
-    })
-}
+        data.forEach(character => {
+            const card = document.createElement("div");
+            card.classList.add("character-card");
+
+            card.innerHTML = `
+                <div class="character-photo">
+                    <img src="${character.image}" alt="${character.name}">
+                </div>
+                <h3>${character.name}</h3>
+                <p>age: ${character.age}</p>
+            `;
+
+            charactersList.append(card);
+        });
+
+    } catch (error) {
+        console.error("Characters error:", error.message);
+    }
+};
+
+fetchCharacters();
 
 //any
 
-const anyXhr = new XMLHttpRequest()
-anyXhr.open("GET", "../data/any.json")
-anyXhr.setRequestHeader("Content-Type", "application/json")
-anyXhr.send()
+const fetchAnyData = async () => {
+    try {
+        const response = await fetch("../data/any.json");
 
-anyXhr.onload = () => {
-    const data = JSON.parse(anyXhr.response)
-    console.log(data)
-}
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки данных");
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+    } catch (error) {
+        console.error("Any error:", error.message);
+    }
+};
+
+fetchAnyData();

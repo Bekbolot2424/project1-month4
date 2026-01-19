@@ -1,0 +1,42 @@
+
+.cards {
+    margin-top: 125px;
+    display: flex;
+    gap: 20px;
+    padding: 40px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 280px;
+    background-color: black;
+    border: 1px solid orange;
+    border-radius: 6px;
+    padding: 15px;
+    color: #fff;
+}
+
+.card .title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: orange;
+}
+
+.cardImg {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 10px;
+}
+
+.cardImg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card .body {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ddd;
+}
