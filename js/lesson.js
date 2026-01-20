@@ -71,57 +71,49 @@ const somInput = document.querySelector('#som')
 const usdInput = document.querySelector('#usd')
 const eurInput = document.querySelector('#eur')
 
-const xhr = new XMLHttpRequest()
-xhr.open('GET', '../data/converter.json')
-xhr.send()
+const converter = async () => {
+    try {
+        const response = await fetch('../data/converter.json')
+        if (!response.ok) throw new Error('Ошибка загрузки JSON')
 
-xhr.onload = () => {
-    const data = JSON.parse(xhr.response)
+        const rates = await response.json()
 
-    const converter = (element, targetElement) => {
-        element.addEventListener('input', () => {
-            if(element.value === '') {
-                targetElement.value = '' 
-                return
-            }
+        const convertMoney = (from, to) => {
+            from.addEventListener('input', () => {
+                if (from.value === '') {
+                    to.value = ''
+                    return
+                }
+
+                const value = Number(from.value)
+
             
-            if(element.id === 'som' && (targetElement.id === 'usd' || targetElement.id === 'eur')) {
-                if(targetElement.id === 'usd') {
-                    targetElement.value = (element.value / data.usd).toFixed(2)
-                }
-                if(targetElement.id === 'eur') {
-                    targetElement.value = (element.value / data.eur).toFixed(2)
-                }
-            }
+                let som
+                if (from.id === 'som') som = value
+                if (from.id === 'usd') som = value * rates.usd
+                if (from.id === 'eur') som = value * rates.eur
 
-            if(element.id === 'usd' && (targetElement.id === 'som' || targetElement.id === 'eur')) {
-                if (targetElement.id === 'som') {
-                    targetElement.value = (element.value * data.usd).toFixed(2)
-                }
-                if(targetElement.id === 'eur') {
-                    targetElement.value = ((element.value * data.usd) / data.eur).toFixed(2)
-                }
-            }
+            
+                if (to.id === 'som') to.value = som.toFixed(2)
+                if (to.id === 'usd') to.value = (som / rates.usd).toFixed(2)
+                if (to.id === 'eur') to.value = (som / rates.eur).toFixed(2)
+            })
+        }
 
-            if(element.id === 'eur' && (targetElement.id === 'usd' || targetElement.id === 'som')) {
-                if (targetElement.id === 'som'){
-                    targetElement.value = (element.value * data.eur).toFixed(2)
-                }
-                if(targetElement.id === 'usd'){
-                    targetElement.value = ((element.value * data.eur) / data.usd).toFixed(2)
-                }
-            }
-        })
+        convertMoney(som, usd)
+        convertMoney(som, eur)
+        convertMoney(usd, som)
+        convertMoney(usd, eur)
+        convertMoney(eur, som)
+        convertMoney(eur, usd)
+
+    } catch (error) {
+        console.error(error)
     }
-
-    converter(somInput, usdInput)
-    converter(usdInput, somInput)
-    converter(somInput, eurInput)
-    converter(eurInput, somInput)
-    converter(eurInput, usdInput)
-    converter(usdInput, eurInput)
-
 }
+
+converter()
+
 
 //CARD SWITCHER
 
@@ -196,3 +188,37 @@ const fetchPosts = async () => {
 };
 
 fetchPosts();
+
+
+/////WEATHER////
+const searchInput = document.querySelector("#searchInput")
+const searchButton = document.querySelector("#search")
+const city = document.querySelector(".city")
+const temp = document.querySelector(".temp")
+
+const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
+const API_KEY = 'e417df62e04d3b1b111abeab19cea714'
+
+searchButton.onclick = () => {
+    if(searchInput.value === ""){
+        city.innerHTML = 'Введите название города'
+        temp.innerHTML = ''
+        city.style.color = 'red'
+    }else {
+        fetch(`${BASE_URL}?q=${searchInput.value}&units=metric&lang=ru&appid=${API_KEY}`)
+            .then(response => response.json())
+            .then(data => {
+                if(data.name) {
+                    city.innerHTML = data.name
+                    city.style.color = "white"
+                } else{
+                    city.innerHTML = "Город не найден"
+                    temp.innerHTML = ""
+                    city.style.color = 'red'
+                }
+                temp.innerHTML = Math.round(data.main.temp) + '&deg;C'
+                city.style.color = "white"
+            })
+        searchInput.value = ""
+    }
+}
